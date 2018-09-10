@@ -14,11 +14,11 @@ public class MyController {
     List<String> intent1 = null;
     List<String> messages1 = null;
 public  Map<String,Boolean> trainedMap = new HashMap<>();
+    public  Map<String,Boolean> finalMap = new HashMap<>();
 
 
     @RequestMapping(value = "/trainMachine")
     public void trainMyMachine() throws FileNotFoundException {
-//File file = new File("C:\\Users\\Prane\\Desktop\\sri");
 
         Scanner scan = new Scanner(new File("C:\\Users\\Prane\\Desktop\\sri\\enron_train.txt"));
 int count=0;
@@ -43,8 +43,8 @@ int count=0;
         for(int x=0;x< intent.size();x++){
             splitMessages(intent.get(x),messages.get(x));
         }
-        callRealWorldEmail(trainedMap);
-        //testMyMachine(trainedMap);
+        //callRealWorldEmail(trainedMap);
+        testMyMachine(trainedMap);
         //System.out.println("Count :: " + count);
         /*for(String x: intent1) {
 
@@ -102,8 +102,6 @@ for(String s2: mess){
 
 
     private void splitMessages(String intent, String message) {
-        //System.out.println("Intent : "  + intent);
-       // System.out.println("Message : " + message);
 
             String[] messageContent = message.split(" ");
             for(String sp: messageContent){
@@ -112,11 +110,9 @@ for(String s2: mess){
                 }
                     else if (trainedMap.containsKey(sp) && (trainedMap.get(sp)))
                         trainedMap.put(sp, intent.equals("Yes") ? true : false);
-
-
             }
 
-        //System.out.println("Map:::" + trainedMap.containsValue(true));
+        //System.out.println("Map:::" + trainedMap.size());
         //System.out.println("Map:::" + trainedMap);
        // checkcount();
         }
@@ -136,24 +132,23 @@ public void testMyMachine(Map<String, Boolean> trainedMap) throws FileNotFoundEx
 
     }
     for(int i =0;i<intentTest.size();i++){
-        //splitMessagestoCheck(intentTest.get(i),messagesTest.get(i));
+        splitMessagestoCheck(intentTest.get(i),messagesTest.get(i));
 
         }
 
     }
 
     private void splitMessagestoCheck(String intentChec, String messageChec) {
-int count=0;
         String[] checkMsg = messageChec.split(" ");
         for(String msg : checkMsg){
 
             if(trainedMap.containsKey(msg)){
                 System.out.println("TrainMap::" + trainedMap.get(msg));
                 System.out.println("TrainMap Intent::" + intentChec);
-                if (trainedMap.get(msg)==true && intentChec.equals("Yes")){
-                   //finalMap.put(messageChec,true);
+                if (trainedMap.get(msg) && intentChec.equals("Yes")){
+                   finalMap.put(messageChec,true);
                     System.out.println("Intent is Yes::::::" + trainedMap.get(msg));
-                    count=count+1;
+
                 }
                 else{
                     System.out.printf("Intent is No");
@@ -161,8 +156,8 @@ int count=0;
             }
         }
 
-      // System.out.println("Final map ::" + finalMap);
-       // System.out.println("Final map ::" + finalMap.size());
+     // System.out.println("Final map ::" + finalMap);
+        System.out.println("Final map ::" + finalMap.size());
         //System.out.println("::Count::" + count);
     }
 
