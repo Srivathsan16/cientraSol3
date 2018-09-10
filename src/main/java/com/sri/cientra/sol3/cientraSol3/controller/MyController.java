@@ -66,6 +66,7 @@ public  Map<String,Boolean> trainedMap = new HashMap<>();
         //callRealWorldEmail(trainedMap);
        testMyMachine(trainedMap);
         System.out.println("Final Accuracy map map Size ::" + finalMap.size());
+        callRealWorldEmail(trainedMap);
     }
     private void splitMessages(String intent, String message) {
 
@@ -124,18 +125,18 @@ public  Map<String,Boolean> trainedMap = new HashMap<>();
             for(String s2: mess){
              messagesTest.add(s2);
             }
-           for(String s: messagesTest) {
+          /* for(String s: messagesTest) {
                 System.out.println("MesseageTest :: is  ::" + s);
-            }
+            }*/
         }
         for(int s=0;s<messagesTest.size();s++){
             if(trainedMap.containsKey(messagesTest.get(s))){
                 if(trainedMap.get(messagesTest.get(s))) {
-                    System.out.println(" if 2 Coming here:::" + trainedMap.get(messagesTest.get(s)));
+                   // System.out.println(" if 2 Coming here:::" + trainedMap.get(messagesTest.get(s)));
                     finalReal.add(true);
                 }
                 else{
-                    System.out.println(" if 3 Coming here:::" + trainedMap.get(messagesTest.get(s)));
+                   // System.out.println(" if 3 Coming here:::" + trainedMap.get(messagesTest.get(s)));
                     finalReal.add(false);
                 }
             }
@@ -162,7 +163,6 @@ public  Map<String,Boolean> trainedMap = new HashMap<>();
             System.out.println("In Here:::Intent is No");
         }
 
-        System.out.println("Could value ::::" + trainedMap.get("How"));
     }
 
 
