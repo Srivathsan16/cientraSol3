@@ -12,11 +12,14 @@ import java.util.*;
 
 @RestController
 public class MyController {
-    WeightOfString ws = new WeightOfString();
+    WeightOfString ws ;
     List<String> intent1 = null;
     List<String> messages1 = null;
 public  Map<String,Boolean> trainedMap = new HashMap<>();
+    public  Map<String,Integer> weightMap = new HashMap<>();
     public  List<String> finalMap = new LinkedList<>();
+    Map<String,Integer> trueMap = new HashMap<>();
+    Map<String,Integer> falseMap = new HashMap<>();
 
 
     @RequestMapping(value = "/trainMachine")
@@ -40,17 +43,73 @@ public  Map<String,Boolean> trainedMap = new HashMap<>();
         for(int x=0;x< intent.size();x++){
             splitMessages(intent.get(x),messages.get(x));
         }
-        callRealWorldEmail(trainedMap);
-        testMyMachine(trainedMap);
+       // if(trueMap.size()>=falseMap.size()){
+            for(Map.Entry<String,Integer> en : trueMap.entrySet()){
+                if(falseMap.containsKey(en.getKey())){
+                    if(en.getValue()>falseMap.get(en.getKey())){
+                        trainedMap.put(en.getKey(),true);
+                    }
+                    else{
+                        trainedMap.put(en.getKey(),false);
+                    }
+                }
+            }
+        System.out.println("Trained map Size ::" + trainedMap.size());
+        System.out.println("Trained map Size ::" + trainedMap);
+        System.out.println("true map Size ::" + trueMap.size());
+        System.out.println("true map  ::" + trueMap);
+        System.out.println("false map Size ::" + falseMap.size());
+        System.out.println("false map  ::" + falseMap);
+
+        //}
+
+        //callRealWorldEmail(trainedMap);
+       testMyMachine(trainedMap);
+        System.out.println("Final Accuracy map map Size ::" + finalMap.size());
     }
     private void splitMessages(String intent, String message) {
+
         String[] messageContent = message.split(" ");
         for(String sp: messageContent){
-            if(!trainedMap.containsKey(sp)) {
-                trainedMap.put(sp, intent.equals("Yes") ? true : false);
-            }
-            else if (trainedMap.containsKey(sp) && (trainedMap.get(sp)))
-                trainedMap.put(sp, intent.equals("Yes") ? true : false);
+            //if(!trainedMap.containsKey(sp)) {
+                //trainedMap.put(sp, intent.equals("Yes") ? true : false);
+                if (intent.equals("Yes")) {
+                    if (trueMap.containsKey(sp))
+                        trueMap.put(sp, trueMap.get(sp) + 1);
+                    else{
+                        trueMap.put(sp,1);
+                    }
+                }
+                if (intent.equals("No")) {
+                    if (falseMap.containsKey(sp))
+                        falseMap.put(sp, falseMap.get(sp) + 1);
+                    else{
+                        falseMap.put(sp,1);
+                    }
+
+                }
+                //weightMap.put(sp,intent.equals("Yes") ?  trueMap.put(sp,trueMap.get(sp)+1): new WeightOfString(0,1));
+              //  System.out.printf("Get::>>" + weightMap.get(sp));
+            //}
+           /* else if (trainedMap.containsKey(sp) && (trainedMap.get(sp))) {
+                //trainedMap.put(sp, intent.equals("Yes") ? true : false);
+                    if (intent.equals("Yes")) {
+                        if (trueMap.containsKey(sp))
+                        trueMap.put(sp, trueMap.get(sp) + 1);
+                        else{
+                            trueMap.put(sp,1);
+                        }
+                    }
+                    if (intent.equals("No")) {
+                        if (falseMap.containsKey(sp))
+                        falseMap.put(sp, falseMap.get(sp) + 1);
+                    else{
+                        falseMap.put(sp,1);
+                    }
+
+                    }
+            }*/
+
         }
     }
 
@@ -121,7 +180,10 @@ public void testMyMachine(Map<String, Boolean> trainedMap) throws FileNotFoundEx
         messagesTest.add(messageT);
 
     }
-    for(int i =0;i<intentTest.size();i++){
+   /* System.out.printf("Mess: " + messagesTest.get(3));
+    System.out.println("Intent ::" + intentTest.get(3));
+    */for(int i =0;i<intentTest.size();i++){
+
         splitMessagestoCheck(intentTest.get(i),messagesTest.get(i));
 
         }
@@ -131,19 +193,18 @@ public void testMyMachine(Map<String, Boolean> trainedMap) throws FileNotFoundEx
     private void splitMessagestoCheck(String intentChec, String messageChec) {
         String[] checkMsg = messageChec.split(" ");
         for (String msg : checkMsg) {
-
             if (trainedMap.containsKey(msg)) {
-               if (trainedMap.get(msg) && intentChec.equals("Yes")) {
-                    finalMap.add(messageChec);
-                   // System.out.println("Intent is Yes::::::" + trainedMap.get(msg));
-
-                } else {
-                   // System.out.printf("Intent is No");
+               if (trainedMap.get(msg)) {
+                    if (intentChec.equals("Yes")) {
+                        if (!finalMap.contains(messageChec))
+                        finalMap.add(messageChec);
+                        // System.out.println("Intent is Yes::::::" + trainedMap.get(msg));
+                    }
                 }
             }
         }
 
-        System.out.println("Final map ::" + finalMap.size());
+     //   System.out.println("Final map ::" + finalMap.size());
     }
 
 
