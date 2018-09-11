@@ -155,11 +155,13 @@ public  Map<String,Boolean> trainedMap = new HashMap<>();
             }
 
         }*/
-        if(finalReal.contains(true)){
-            System.out.println("Intent is Yes");
+        if(finalReal.contains(false)){
+            System.out.println("FindREal:::" + finalReal);
+            System.out.println("In Here:::Intent is No");
+
         }
         else{
-            System.out.println("In Here:::Intent is No");
+            System.out.println("Intent is Yes");
         }
 
     }
