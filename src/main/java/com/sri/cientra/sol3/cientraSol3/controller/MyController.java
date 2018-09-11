@@ -12,8 +12,6 @@ import java.util.*;
 
 @RestController
 public class MyController {
-    List<String> intent1 = null;
-    List<String> messages1 = null;
 public  Map<String,Boolean> trainedMap = new HashMap<>();
     public  Map<String,Integer> weightMap = new HashMap<>();
     public  List<String> finalMap = new LinkedList<>();
@@ -36,9 +34,7 @@ public  Map<String,Boolean> trainedMap = new HashMap<>();
             intent.add(intentStr);
             messages.add(message);
          }
-        //intent1 = intent;
-       // messages1 = messages;
-        scan.close();
+         scan.close();
         for(int x=0;x< intent.size();x++){
             splitMessages(intent.get(x),messages.get(x));
         }
