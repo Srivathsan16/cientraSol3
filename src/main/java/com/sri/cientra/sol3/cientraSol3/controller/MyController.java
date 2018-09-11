@@ -15,7 +15,7 @@ public class MyController {
     WeightOfString ws ;
     List<String> intent1 = null;
     List<String> messages1 = null;
-public  Map<String,Boolean> trainedMap = new HashMap<>();
+    public  Map<String,Boolean> trainedMap = new HashMap<>();
     public  Map<String,Integer> weightMap = new HashMap<>();
     public  List<String> finalMap = new LinkedList<>();
     Map<String,Integer> trueMap = new HashMap<>();
@@ -116,6 +116,8 @@ public  Map<String,Boolean> trainedMap = new HashMap<>();
 
     private void callRealWorldEmail(Map<String, Boolean> trainedMap) throws FileNotFoundException {
          Map<String,Boolean> finalMap = new HashMap<>();
+         int t=0;
+         int f=0;
         Scanner scan = new Scanner(new File("C:\\Users\\Prane\\Desktop\\sri\\enron_train_real.txt"));
        List<Boolean> finalReal = new ArrayList<>();
         List<String> messagesTest = new ArrayList<>();
@@ -132,6 +134,14 @@ public  Map<String,Boolean> trainedMap = new HashMap<>();
         for(int s=0;s<messagesTest.size();s++){
             if(trainedMap.containsKey(messagesTest.get(s))){
                 if(trainedMap.get(messagesTest.get(s))) {
+                    /*if(trueMap.containsKey(messagesTest.get(s))){
+                        t= trueMap.get(messagesTest.get(s)) + t;
+                        System.out.println("Test :::" + t + " check" + trueMap.get(messagesTest.get(s)) );
+                    }
+                    else if(falseMap.containsKey(messagesTest.get(s))){
+                        f = falseMap.get(messagesTest.get(s)) + f;
+                        System.out.println("Test ::: false " + f + " check" + trueMap.get(messagesTest.get(s)) );
+                    }*/
                    // System.out.println(" if 2 Coming here:::" + trainedMap.get(messagesTest.get(s)));
                     finalReal.add(true);
                 }
@@ -156,7 +166,13 @@ public  Map<String,Boolean> trainedMap = new HashMap<>();
             }
 
         }*/
-        if(finalReal.contains(true)){
+        /*double res = t+f;
+        double re1 =  100/res;
+        double probOft = re1*t;
+        double probOff =re1*f;
+        System.out.println("Probability of Intent true:" + probOft );
+        System.out.println("Probability of Intent false:" + probOff );
+        */if(finalReal.contains(true)){
             System.out.println("Intent is Yes");
         }
         else{
