@@ -1,7 +1,7 @@
 package com.sri.cientra.sol3.cientraSol3.controller;
 
 
-import com.sri.cientra.sol3.cientraSol3.domain.WeightOfString;
+
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +12,6 @@ import java.util.*;
 
 @RestController
 public class MyController {
-    WeightOfString ws ;
     List<String> intent1 = null;
     List<String> messages1 = null;
 public  Map<String,Boolean> trainedMap = new HashMap<>();
