@@ -1,6 +1,7 @@
 package com.sri.cientra.sol3.cientraSol3.controller;
 
 
+
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,43 +15,76 @@ public class MyController {
     List<String> intent1 = null;
     List<String> messages1 = null;
 public  Map<String,Boolean> trainedMap = new HashMap<>();
+    public  Map<String,Integer> weightMap = new HashMap<>();
+    public  List<String> finalMap = new LinkedList<>();
+    Map<String,Integer> trueMap = new HashMap<>();
+    Map<String,Integer> falseMap = new HashMap<>();
 
 
     @RequestMapping(value = "/trainMachine")
     public void trainMyMachine() throws FileNotFoundException {
-//File file = new File("C:\\Users\\Prane\\Desktop\\sri");
 
         Scanner scan = new Scanner(new File("C:\\Users\\Prane\\Desktop\\sri\\enron_train.txt"));
-int count=0;
         List<String> intent = new ArrayList<>();
         List<String> messages = new ArrayList<>();
 
         while(scan.hasNext()){
             String curLine = scan.nextLine();
             String[] splitted = curLine.split("\t");
-           String intentStr = splitted[0].trim();
+            String intentStr = splitted[0].trim();
             String  message = splitted[1].trim();
             intent.add(intentStr);
             messages.add(message);
-
-        }
-        //System.out.println("Intent List is:::" + intent.size());
-       // System.out.println("Message List Size is ::" + messages.size());
-       // System.out.println("Message List Size is ::" + messages.get(9));
-        intent1 = intent;
-        messages1 = messages;
+         }
+        //intent1 = intent;
+       // messages1 = messages;
         scan.close();
         for(int x=0;x< intent.size();x++){
             splitMessages(intent.get(x),messages.get(x));
         }
-        callRealWorldEmail(trainedMap);
-        //testMyMachine(trainedMap);
-        //System.out.println("Count :: " + count);
-        /*for(String x: intent1) {
+            for(Map.Entry<String,Integer> en : trueMap.entrySet()){
+                if(falseMap.containsKey(en.getKey())){
+                    if(en.getValue()>falseMap.get(en.getKey())){
+                        trainedMap.put(en.getKey(),true);
+                    }
+                    else{
+                        trainedMap.put(en.getKey(),false);
+                    }
+                }
+            }
+            //TODO:Remove if confused These are Just for Understanding and debugging
+        System.out.println("Trained map Size ::" + trainedMap.size());
+        System.out.println("Trained map Size ::" + trainedMap);
+        System.out.println("true map Size ::" + trueMap.size());
+        System.out.println("true map  ::" + trueMap);
+        System.out.println("false map Size ::" + falseMap.size());
+        System.out.println("false map  ::" + falseMap);
 
-            splitMessages(messages1,x);
-        }*/
-       // System.out.println("Intent List 1 is:::" + intent1.size());
+
+        testMyMachine(trainedMap);
+        System.out.println("Test trained data :::  testDataset ::::::" + finalMap.size());
+        callRealWorldEmail(trainedMap);
+    }
+    private void splitMessages(String intent, String message) {
+
+        String[] messageContent = message.split(" ");
+        for(String sp: messageContent){
+               if (intent.equals("Yes")) {
+                    if (trueMap.containsKey(sp))
+                        trueMap.put(sp, trueMap.get(sp) + 1);
+                    else{
+                        trueMap.put(sp,1);
+                    }
+                }
+                if (intent.equals("No")) {
+                    if (falseMap.containsKey(sp))
+                        falseMap.put(sp, falseMap.get(sp) + 1);
+                    else{
+                        falseMap.put(sp,1);
+                    }
+
+                }
+        }
     }
 
     private void callRealWorldEmail(Map<String, Boolean> trainedMap) throws FileNotFoundException {
@@ -61,65 +95,32 @@ int count=0;
         while(scan.hasNext()){
             String curLine = scan.nextLine();
             String[] mess = curLine.split(" ");
-for(String s2: mess){
-    messagesTest.add(s2);
-}
-          //  String intentStr = splitted[0].trim();
-           // String  messageT = mess[1].trim();
-            //System.out.println(messageT);
-          //  intentTest.add(intentStr);
-            //messagesTest.add(messageT);
-            for(String s: messagesTest) {
-                System.out.println("MesseageTest :: is  ::" + s);
+            for(String s2: mess){
+             messagesTest.add(s2);
             }
         }
-        for(String s: messagesTest){
-            if(trainedMap.containsKey(s)){
-                System.out.println("If 1");
-                if(trainedMap.get(s)==true)
-                    System.out.println(" if 2 Coming here:::" + trainedMap.get(s));
+        for(int s=0;s<messagesTest.size();s++){
+            if(trainedMap.containsKey(messagesTest.get(s))){
+                if(trainedMap.get(messagesTest.get(s))) {
                     finalReal.add(true);
-            }
-            else if (trainedMap.containsKey(s)){
-                System.out.println(" if 3 Coming here:::" + trainedMap.get(s));
-                finalReal.add(false);
+                }
+                else{
+                    finalReal.add(false);
+                }
             }
         }
-        System.out.println("Train How" + trainedMap.get("How"));
-        System.out.println("Train are" + trainedMap.get("are"));
-        System.out.println("Train things" + trainedMap.get("things"));
-        System.out.println("final map" + finalReal);
-        if(finalReal.contains(true)){
-            System.out.println("Intent is Yes");
+
+        if(finalReal.contains(false)){
+            System.out.println("FindReal:::" + finalReal);
+            System.out.println("Intent is No");
+
         }
         else{
-            System.out.println("In Here:::Intent is No");
+            System.out.println("Intent is Yes");
         }
-        finalMap = null;
 
     }
 
-
-
-    private void splitMessages(String intent, String message) {
-        //System.out.println("Intent : "  + intent);
-       // System.out.println("Message : " + message);
-
-            String[] messageContent = message.split(" ");
-            for(String sp: messageContent){
-                if(!trainedMap.containsKey(sp)) {
-                    trainedMap.put(sp, intent.equals("Yes") ? true : false);
-                }
-                    else if (trainedMap.containsKey(sp) && (trainedMap.get(sp)))
-                        trainedMap.put(sp, intent.equals("Yes") ? true : false);
-
-
-            }
-
-        //System.out.println("Map:::" + trainedMap.containsValue(true));
-        //System.out.println("Map:::" + trainedMap);
-       // checkcount();
-        }
 
 
 public void testMyMachine(Map<String, Boolean> trainedMap) throws FileNotFoundException {
@@ -135,36 +136,30 @@ public void testMyMachine(Map<String, Boolean> trainedMap) throws FileNotFoundEx
         messagesTest.add(messageT);
 
     }
-    for(int i =0;i<intentTest.size();i++){
-        //splitMessagestoCheck(intentTest.get(i),messagesTest.get(i));
+   for(int i =0;i<intentTest.size();i++){
+
+        splitMessagestoCheck(intentTest.get(i),messagesTest.get(i));
 
         }
 
     }
 
     private void splitMessagestoCheck(String intentChec, String messageChec) {
-int count=0;
         String[] checkMsg = messageChec.split(" ");
-        for(String msg : checkMsg){
-
-            if(trainedMap.containsKey(msg)){
-                System.out.println("TrainMap::" + trainedMap.get(msg));
-                System.out.println("TrainMap Intent::" + intentChec);
-                if (trainedMap.get(msg)==true && intentChec.equals("Yes")){
-                   //finalMap.put(messageChec,true);
-                    System.out.println("Intent is Yes::::::" + trainedMap.get(msg));
-                    count=count+1;
-                }
-                else{
-                    System.out.printf("Intent is No");
+        for (String msg : checkMsg) {
+            if (trainedMap.containsKey(msg)) {
+               if (trainedMap.get(msg)) {
+                    if (intentChec.equals("Yes")) {
+                        if (!finalMap.contains(messageChec))
+                        finalMap.add(messageChec);
+                    }
                 }
             }
         }
 
-      // System.out.println("Final map ::" + finalMap);
-       // System.out.println("Final map ::" + finalMap.size());
-        //System.out.println("::Count::" + count);
+
     }
+
 
 
 }
