@@ -84,6 +84,9 @@ public  Map<String,Boolean> trainedMap = new HashMap<>();
     }
 
     private void callRealWorldEmail(Map<String, Boolean> trainedMap) throws FileNotFoundException {
+        double noOfTrue =0;
+        double noOfFalse =0;
+        double res = 0.0;
          Map<String,Boolean> finalMap = new HashMap<>();
         Scanner scan = new Scanner(new File("C:\\Users\\Prane\\Desktop\\sri\\enron_train_real.txt"));
        List<Boolean> finalReal = new ArrayList<>();
@@ -105,15 +108,26 @@ public  Map<String,Boolean> trainedMap = new HashMap<>();
                 }
             }
         }
-
-        if(finalReal.contains(false)){
-            System.out.println("FindReal:::" + finalReal);
-            System.out.println("Intent is No");
-
-        }
-        else{
+for (Boolean b : finalReal){
+    if(b){
+        noOfTrue=noOfTrue+1;
+    }
+    else{
+        noOfFalse=noOfFalse+1;
+    }
+}
+        res = (noOfTrue+noOfFalse);
+        res=100/res;
+        System.out.println("True Percentage ::" + noOfTrue*res);
+        System.out.println("False Percentage ::" + noOfFalse*res);
+        if (noOfTrue*res>noOfFalse*res) {
             System.out.println("Intent is Yes");
         }
+        else if (noOfFalse*res>noOfTrue*res){
+            System.out.println("Intent is No");
+        }
+        System.out.println("FindReal:::" + finalReal);
+
 
     }
 
